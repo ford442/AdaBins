@@ -56,7 +56,7 @@ class ToTensor(object):
             return img
 
 class InferenceHelper:
-    def __init__(self, dataset='nyu', device=torch.device("cuda:0")):
+    def __init__(self, dataset='nyu', device=torch.device("cpu")):
         self.toTensor = ToTensor()
         self.device = device
         if dataset == 'nyu':
