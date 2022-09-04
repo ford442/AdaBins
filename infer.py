@@ -76,7 +76,10 @@ class InferenceHelper:
         model, _, _ = model_io.load_checkpoint(pretrained_path, model)
         model.eval()
         self.model = model.to(self.device)
-
+    def ada_cuda(self):
+        self.model = model.to(torch.device("cuda:0"))
+    def ada_cpu(self):
+        self.model = model.to(torch.device("cpu"))    
     @torch.no_grad()
     def predict_pil(self, pil_image, visualized=False):
         img = np.asarray(pil_image) / 255.
