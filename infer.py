@@ -77,8 +77,9 @@ class InferenceHelper:
         model.eval()
         self.model = model.to(self.device)
     def ada_cuda():
-        self.model = model.to(torch.device("cuda:0"))
+        model.cuda()
     def ada_cpu():
+        model.cpu()
         self.model = model.to(torch.device("cpu"))    
     @torch.no_grad()
     def predict_pil(self, pil_image, visualized=False):
