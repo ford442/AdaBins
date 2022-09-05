@@ -7,11 +7,9 @@ import torch.nn as nn
 from PIL import Image
 from torchvision import transforms
 from tqdm import tqdm
-
 import model_io
 import utils
 from models import UnetAdaptiveBins
-
 
 def _is_pil_image(img):
     return isinstance(img, Image.Image)
@@ -76,10 +74,9 @@ class InferenceHelper:
         model, _, _ = model_io.load_checkpoint(pretrained_path, model)
         model.eval()
         #self.model = model.to(self.device)
-        self.model = model.cpu()
+        self.model = model.cuda()
     @torch.no_grad()
     def predict_pil(self, pil_image, visualized=False):
-        self.model = model.cuda()
         img = np.asarray(pil_image) / 255.
         img = self.toTensor(img).unsqueeze(0).float().to(self.device)
         bin_centers, pred = self.predict(img)
@@ -87,7 +84,6 @@ class InferenceHelper:
             viz = utils.colorize(torch.from_numpy(pred).unsqueeze(0), vmin=None, vmax=None, cmap='magma')
             viz = Image.fromarray(viz)
             return bin_centers, pred, viz
-        self.model = model.cpu()
         return bin_centers, pred
 
     @torch.no_grad()
