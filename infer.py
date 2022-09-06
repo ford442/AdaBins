@@ -78,7 +78,7 @@ class InferenceHelper:
     def ada_CPU():
         model.to(torch.device("cpu"),non_blocking=True)
     def ada_CUDA():
-        model.to(torch.device("cude:0"),non_blocking=True)
+        model.to(torch.device("cuda:0"),non_blocking=True)
     @torch.no_grad()
     def predict_pil(self, pil_image, visualized=False):
         img = np.asarray(pil_image) / 255.
