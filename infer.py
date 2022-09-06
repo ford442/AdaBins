@@ -46,7 +46,6 @@ class ToTensor(object):
         else:
             nchannel = len(pic.mode)
         img = img.view(pic.size[1], pic.size[0], nchannel)
-
         img = img.transpose(0, 1).transpose(0, 2).contiguous()
         if isinstance(img, torch.ByteTensor):
             return img.float()
@@ -74,7 +73,7 @@ class InferenceHelper:
         model, _, _ = model_io.load_checkpoint(pretrained_path, model)
         model.eval()
         #self.model = model.to(self.device)
-        self.model = model.to(torch.device("cude:0"),non_blocking=True)
+        self.model = model.to(torch.device("cuda:0"),non_blocking=True)
     def ada_CPU():
         model.to(torch.device("cpu"),non_blocking=True)
     def ada_CUDA():
