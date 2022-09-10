@@ -1,6 +1,5 @@
 import glob
 import os
-
 import numpy as np
 import torch
 import torch.nn as nn
@@ -12,20 +11,18 @@ import utils
 from models import UnetAdaptiveBins
 
 def _is_pil_image(img):
-    return isinstance(img, Image.Image)
+    return isinstance(img,Image.Image)
 
 def _is_numpy_image(img):
-    return isinstance(img, np.ndarray) and (img.ndim in {2, 3})
+    return isinstance(img,np.ndarray) and (img.ndim in {2,3})
 
 class ToTensor(object):
     def __init__(self):
-        self.normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-
+        self.normalize=transforms.Normalize(mean=[0.485,0.456,0.406],std=[0.229,0.224,0.225])
     def __call__(self, image, target_size=(640, 480)):
         image = self.to_tensor(image)
         image = self.normalize(image)
         return image
-
     def to_tensor(self, pic):
         if not (_is_pil_image(pic) or _is_numpy_image(pic)):
             raise TypeError(
@@ -53,7 +50,7 @@ class ToTensor(object):
             return img
 
 class InferenceHelper:
-    def __init__(self, dataset='nyu', device=torch.device("cuda:0")):
+    def __init__(self,dataset='nyu',device=torch.device("cuda:0")):
         self.toTensor = ToTensor()
         self.device = device
         if dataset == 'nyu':
@@ -74,7 +71,6 @@ class InferenceHelper:
         model.eval()
         #self.model = model.to(self.device)
         self.model = model.to(torch.device("cuda:0"),non_blocking=True)
-    @torch.no_grad()
     def predict_pil(self, pil_image, visualized=False):
         img = np.asarray(pil_image) / 255.
         img = self.toTensor(img).unsqueeze(0).float().cpu()
@@ -84,8 +80,6 @@ class InferenceHelper:
             viz = Image.fromarray(viz)
             return bin_centers, pred, viz
         return bin_centers, pred
-
-    @torch.no_grad()
     def predict(self, image):
         bins, pred = self.model(image)
         pred = np.clip(pred.cpu().numpy(), self.min_depth, self.max_depth)
@@ -103,8 +97,6 @@ class InferenceHelper:
         centers = centers[centers > self.min_depth]
         centers = centers[centers < self.max_depth]
         return centers, final
-
-    @torch.no_grad()
     def predict_dir(self, test_dir, out_dir):
         os.makedirs(out_dir, exist_ok=True)
         transform = ToTensor()
@@ -122,10 +114,10 @@ class InferenceHelper:
 if __name__ == '__main__':
     import matplotlib.pyplot as plt
     from time import time
-    img = Image.open("test_imgs/classroom__rgb_00283.jpg")
-    start = time()
-    inferHelper = InferenceHelper()
-    centers, pred = inferHelper.predict_pil(img)
-    print(f"took :{time() - start}s")
-    plt.imshow(pred.squeeze(), cmap='magma_r')
+    img=Image.open("test_imgs/classroom__rgb_00283.jpg")
+    start=time()
+    inferHelper=InferenceHelper()
+    centers,pred=inferHelper.predict_pil(img)
+    print(f"took :{time()-start}s")
+    plt.imshow(pred.squeeze(),cmap='magma_r')
     plt.show()
