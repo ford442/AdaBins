@@ -77,7 +77,7 @@ class InferenceHelper:
     @torch.no_grad()
     def predict_pil(self, pil_image, visualized=False):
         img = np.asarray(pil_image) / 255.
-        img = self.toTensor(img).unsqueeze(0).half().to(self.device)
+        img = self.toTensor(img).unsqueeze(0).float().cpu()
         bin_centers, pred = self.predict(img)
         if visualized:
             viz = utils.colorize(torch.from_numpy(pred).unsqueeze(0), vmin=None, vmax=None, cmap='magma')
