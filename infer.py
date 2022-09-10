@@ -84,7 +84,7 @@ class InferenceHelper:
     def predict(self, image):
         bins, pred = self.model(image)
         pred = np.clip(pred.cpu().numpy(), self.min_depth, self.max_depth)
-        image = torch.Tensor(np.array(image.cpu().numpy())[..., ::-1].copy()).to(torch.device("cuda:0"));
+        image = torch.Tensor(np.array(image.cpu().numpy())[..., ::-1].copy()).cpu().to(torch.device("cuda:0"));
         pred_lr = self.model(image)[-1]
         pred_lr = np.clip(pred_lr.cpu().numpy()[..., ::-1], self.min_depth, self.max_depth)
         final = 0.5 * (pred + pred_lr)
