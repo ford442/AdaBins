@@ -53,7 +53,7 @@ class ToTensor(object):
             return img
 
 class InferenceHelper:
-    def __init__(self, dataset='nyu', device=torch.device("cpu")):
+    def __init__(self, dataset='nyu', device=torch.device("cuda:0")):
         self.toTensor = ToTensor()
         self.device = device
         if dataset == 'nyu':
@@ -73,7 +73,7 @@ class InferenceHelper:
         model, _, _ = model_io.load_checkpoint(pretrained_path, model)
         model.eval()
         #self.model = model.to(self.device)
-        self.model = model.to(torch.device("cpu"),non_blocking=True)
+        self.model = model.to(torch.device("cuda:0"),non_blocking=True)
     @torch.no_grad()
     def predict_pil(self, pil_image, visualized=False):
         img = np.asarray(pil_image) / 255.
