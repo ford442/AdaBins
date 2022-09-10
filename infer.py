@@ -73,9 +73,9 @@ class InferenceHelper:
         self.model = model.to(torch.device("cuda:0"),non_blocking=True)
     def predict_pil(self, pil_image, visualized=False):
         img = np.asarray(pil_image) / 255.
-        img = self.toTensor(img).unsqueeze(0).float().to(torch.device("cuda:0")
-        bin_centers, pred = self.predict(img)
-        img=None
+        img = self.toTensor(img).unsqueeze(0).float().to(torch.device("cuda:0"));
+        bin_centers, pred = self.predict(img);
+        img=None;
         if visualized:
             viz = utils.colorize(torch.from_numpy(pred).unsqueeze(0), vmin=None, vmax=None, cmap='magma')
             viz = Image.fromarray(viz)
