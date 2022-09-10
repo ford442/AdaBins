@@ -84,11 +84,12 @@ class InferenceHelper:
     def predict(self, image):
         bins, pred = self.model(image)
         pred = np.clip(pred.cpu().numpy(), self.min_depth, self.max_depth)
-        image = torch.Tensor(np.array(image.cpu().numpy())[..., ::-1].copy()).cpu()
+        image = torch.Tensor(np.array(image.cpu().numpy())[..., ::-1].copy()).to(torch.device("cuda:0"));
         pred_lr = self.model(image)[-1]
         pred_lr = np.clip(pred_lr.cpu().numpy()[..., ::-1], self.min_depth, self.max_depth)
         final = 0.5 * (pred + pred_lr)
         final = nn.functional.interpolate(torch.Tensor(final), image.shape[-2:],mode='bilinear', align_corners=True).cpu().numpy()
+        image=None;
         final[final < self.min_depth] = self.min_depth
         final[final > self.max_depth] = self.max_depth
         final[np.isinf(final)] = self.max_depth
