@@ -68,7 +68,7 @@ class InferenceHelper:
             raise ValueError("dataset can be either 'nyu' or 'kitti' but got {}".format(dataset));
         model,_,_=model_io.load_checkpoint(pretrained_path,model);
         model.eval();
-        self.model=model.to(torch.device("cuda:0"),non_blocking=True);
+        #self.model=model.to(torch.device("cuda:0"),non_blocking=True);
     def predict_pil(self,pil_image,visualized=False):
         img=np.asarray(pil_image)/255.0;
         img=self.toTensor(img).unsqueeze(0).float().to(torch.device("cuda:0"));
