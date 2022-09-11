@@ -24,12 +24,12 @@ def _is_numpy_image(img):
 class ToTensor(object):
     def __init__(self):
         self.normalize=transforms.Normalize(mean=[0.485,0.456,0.406],std=[0.229,0.224,0.225]);
-    @class_cache(maxsize=40)   
+    #@class_cache(maxsize=40)   
     def __call__(self, image, target_size=(640, 480)):
         image=self.to_tensor(image);
         image=self.normalize(image);
         return image;
-    @class_cache(maxsize=40)
+    #@class_cache(maxsize=40)
     def to_tensor(self,pic):
         if not (_is_pil_image(pic) or _is_numpy_image(pic)):
             raise TypeError('pic should be PIL Image or ndarray. Got {}'.format(type(pic)));
@@ -75,7 +75,7 @@ class InferenceHelper:
             raise ValueError("dataset can be either 'nyu' or 'kitti' but got {}".format(dataset));
         model,_,_=model_io.load_checkpoint(pretrained_path,model);
         self.model=model.eval();
-    @class_cache(maxsize=40)    
+    #@class_cache(maxsize=40)    
     def predict_pil(self,pil_image,visualized=False):
         img=np.asarray(pil_image)/255.0;
         img=self.toTensor(img).unsqueeze(0).float().to(torch.device("cuda:0"),non_blocking=False);
@@ -86,7 +86,7 @@ class InferenceHelper:
             viz=Image.fromarray(viz);
             return bin_centers,pred,viz;
         return bin_centers,pred;
-    @class_cache(maxsize=40)
+    #@class_cache(maxsize=40)
     def predict(self,image):
         bins,pred=self.model(image);
         pred=np.clip(pred.cpu().numpy(),self.min_depth,self.max_depth);
@@ -108,7 +108,7 @@ class InferenceHelper:
         return centers,final;
         centers=None;
         final=None;
-    @class_cache(maxsize=40)
+    #@class_cache(maxsize=40)
     def predict_dir(self,test_dir,out_dir):
         os.makedirs(out_dir,exist_ok=True);
         transform=ToTensor();
