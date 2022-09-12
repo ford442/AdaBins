@@ -13,11 +13,11 @@ from models import UnetAdaptiveBins;
 from functools import lru_cache as cache;
 from methodtools import lru_cache as class_cache;
 
-@cache(maxsize=40)
+#@cache(maxsize=40)
 def _is_pil_image(img):
     return isinstance(img,Image.Image);
 
-@cache(maxsize=40)
+#@cache(maxsize=40)
 def _is_numpy_image(img):
     return isinstance(img,np.ndarray) and (img.ndim in {2,3});
 
