@@ -60,7 +60,7 @@ class InferenceHelper:
         self.toTensor=ToTensor();
         self.device=device;
     torch.no_grad()
-    def load_model():
+    def load_model(self,dataset='nyu',device=torch.device("cuda:0")):
         if dataset=='nyu':
             self.min_depth=1e-3;
             self.max_depth=10;
@@ -75,7 +75,6 @@ class InferenceHelper:
             pretrained_path="./pretrained/AdaBins_kitti.pt";
         else:
             raise ValueError("dataset can be either 'nyu' or 'kitti' but got {}".format(dataset));
-            
         model,_,_=model_io.load_checkpoint(pretrained_path,model);
         self.model=model.eval();
     #@class_cache(maxsize=40)
