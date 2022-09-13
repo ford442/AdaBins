@@ -78,7 +78,7 @@ class InferenceHelper:
     #@class_cache(maxsize=40)    
     def predict_pil(self,pil_image,visualized=False):
         img=np.asarray(pil_image)/255.0;
-        img=self.toTensor(img).unsqueeze(0).float().to(torch.device("cuda:0"),non_blocking=False);
+        img=self.toTensor(img).unsqueeze(0).float().to(torch.device("cuda:0"));
         bin_centers,pred=self.predict(img);
         img=None;
         if visualized:
@@ -90,7 +90,7 @@ class InferenceHelper:
     def predict(self,image):
         bins,pred=self.model(image);
         pred=np.clip(pred.cpu().numpy(),self.min_depth,self.max_depth);
-        image=torch.Tensor(np.array(image.cpu().numpy())[...,::-1].copy()).cpu().to(torch.device("cuda:0"),non_blocking=False);
+        image=torch.Tensor(np.array(image.cpu().numpy())[...,::-1].copy()).cpu().to(torch.device("cuda:0"));
         pred_lr=self.model(image)[-1];
         pred_lr=np.clip(pred_lr.cpu().numpy()[...,::-1],self.min_depth,self.max_depth);
         final=0.5*(pred+pred_lr);
