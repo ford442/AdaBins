@@ -73,8 +73,6 @@ class InferenceHelper:
         model, _, _ = model_io.load_checkpoint(pretrained_path, model)
         model.eval()
         #self.model = model.to(self.device)
-        self.model = model.to(torch.device("cuda:0"),non_blocking=True)
-    @torch.no_grad()
     def predict_pil(self, pil_image, visualized=False):
         img = np.asarray(pil_image) / 255.
         img = self.toTensor(img).unsqueeze(0).float().to(torch.device("cuda:0"))
@@ -84,8 +82,6 @@ class InferenceHelper:
             viz = Image.fromarray(viz)
             return bin_centers, pred, viz
         return bin_centers, pred
-
-    @torch.no_grad()
     def predict(self, image):
         bins, pred = self.model(image)
         pred = np.clip(pred.cpu().numpy(), self.min_depth, self.max_depth)
@@ -104,7 +100,6 @@ class InferenceHelper:
         centers = centers[centers < self.max_depth]
         return centers, final
 
-    @torch.no_grad()
     def predict_dir(self, test_dir, out_dir):
         os.makedirs(out_dir, exist_ok=True)
         transform = ToTensor()
