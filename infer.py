@@ -75,7 +75,8 @@ class InferenceHelper:
             raise ValueError("dataset can be either 'nyu' or 'kitti' but got {}".format(dataset));
         model,_,_=model_io.load_checkpoint(pretrained_path,model);
         self.model=model.eval();
-    #@class_cache(maxsize=40)    
+    #@class_cache(maxsize=40)
+    torch.no_grad()
     def predict_pil(self,pil_image,visualized=False):
         img=np.asarray(pil_image)/255.0;
         img=self.toTensor(img).unsqueeze(0).float().to(torch.device("cuda:0"));
@@ -87,6 +88,7 @@ class InferenceHelper:
             return bin_centers,pred,viz;
         return bin_centers,pred;
     #@class_cache(maxsize=40)
+    @torch.no_grad()
     def predict(self,image):
         bins,pred=self.model(image);
         pred=np.clip(pred.cpu().numpy(),self.min_depth,self.max_depth);
