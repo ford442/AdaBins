@@ -59,6 +59,8 @@ class InferenceHelper:
     def __init__(self,dataset='nyu',device=torch.device("cuda:0")):
         self.toTensor=ToTensor();
         self.device=device;
+    @torch.no_grad()
+    def load_model(self,dataset='nyu',device=torch.device("cuda:0")):
         if dataset=='nyu':
             self.min_depth=1e-3;
             self.max_depth=10;
@@ -76,7 +78,7 @@ class InferenceHelper:
         model,_,_=model_io.load_checkpoint(pretrained_path,model);
         self.model=model.eval();
     #@class_cache(maxsize=40)
-    torch.no_grad()
+    @torch.no_grad()
     def predict_pil(self,pil_image,visualized=False):
         img=np.asarray(pil_image)/255.0;
         img=self.toTensor(img).unsqueeze(0).float().to(torch.device("cuda:0"));
@@ -116,7 +118,7 @@ class InferenceHelper:
         transform=ToTensor();
         all_files=glob.glob(os.path.join(test_dir,"*"));
         self.model.eval();
-        self.model=model.to(self.device)
+        #self.model=model.to(self.device)
 
         for f in tqdm(all_files):
             image=np.asarray(Image.open(f),dtype='float32')/255.0;
