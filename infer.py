@@ -81,7 +81,7 @@ class InferenceHelper:
     @torch.no_grad()
     def predict_pil(self,pil_image,visualized=False):
         img=np.asarray(pil_image)/255.0;
-        img=self.toTensor(img).unsqueeze(0).half().to(torch.device("cuda:0"));
+        img=self.toTensor(img).unsqueeze(0).to(torch.float64).to(torch.device("cuda:0"));
         bin_centers,pred=self.predict(img);
         img=None;
         if visualized:
