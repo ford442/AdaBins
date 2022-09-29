@@ -117,9 +117,7 @@ class InferenceHelper:
         os.makedirs(out_dir,exist_ok=True);
         transform=ToTensor();
         all_files=glob.glob(os.path.join(test_dir,"*"));
-        self.model.eval();
-        self.model=model.to(self.device)
-
+        self.model=model.eval().to(self.device).requires_grad(False);
         for f in tqdm(all_files):
             image=np.asarray(Image.open(f),dtype='float32')/255.0;
             image=transform(image).unsqueeze(0).to(self.device);
