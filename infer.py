@@ -9,7 +9,6 @@ from tqdm import tqdm;
 import model_io;
 import utils;
 from models import UnetAdaptiveBins;
-
 from functools import lru_cache as cache;
 from methodtools import lru_cache as class_cache;
 
@@ -66,7 +65,7 @@ class InferenceHelper:
             self.max_depth=10;
             self.saving_factor=1000;
             model=UnetAdaptiveBins.build(n_bins=256,min_val=self.min_depth,max_val=self.max_depth);
-            pretrained_path = "/content/pretrained/AdaBins_nyu.pt";
+            pretrained_path="/content/pretrained/AdaBins_nyu.pt";
         elif dataset=='kitti':
             self.min_depth=1e-3;
             self.max_depth=80;
@@ -76,7 +75,7 @@ class InferenceHelper:
         else:
             raise ValueError("dataset can be either 'nyu' or 'kitti' but got {}".format(dataset));
         model,_,_=model_io.load_checkpoint(pretrained_path,model);
-        self.model=model.eval();
+        self.model=model.eval().to(torch.device("cuda:0")).requires_grad_(False);
     #@class_cache(maxsize=40)
     @torch.no_grad()
     def predict_pil(self,pil_image,visualized=False):
